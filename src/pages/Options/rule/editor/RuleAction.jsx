@@ -37,7 +37,30 @@ const actionSelections = [
   }
 ]
 
-const RuleAction = ({ options, config, pipe }, ref) => {
+const reverseActionSelections = [
+  {
+    label: getLang("rule_action_close_when_matched"),
+    key: "closeWhenMatched"
+  },
+  {
+    label: getLang("rule_action_open_when_matched"),
+    key: "openWhenMatched"
+  },
+  {
+    label: getLang("rule_action_close_only_when_matched"),
+    key: "closeOnlyWhenMatched"
+  },
+  {
+    label: getLang("rule_action_open_only_when_matched"),
+    key: "openOnlyWhenMatched"
+  },
+  {
+    label: getLang("rule_action_none"),
+    key: "none"
+  }
+]
+
+const RuleAction = ({ options, config, reverseSelection, pipe }, ref) => {
   useImperativeHandle(ref, () => ({
     // 获取配置
     getActionConfig: () => {
@@ -46,7 +69,8 @@ const RuleAction = ({ options, config, pipe }, ref) => {
       }
 
       const actionConfig = {
-        actionType: actionTypeKey
+        actionType: actionTypeKey,
+        reverseActionType: reverseActionTypeKey
       }
 
       if (refreshAfterEnable) {
@@ -73,6 +97,9 @@ const RuleAction = ({ options, config, pipe }, ref) => {
   const [actionTypeKey, setActionTypeKey] = useState("")
   const [actionTipMessage, setActionTipMessage] = useState("")
 
+  const [reverseActionTypeKey, setReverseActionTypeKey] = useState("")
+  const [reverseActionTipMessage, setReverseActionTipMessage] = useState("")
+
   // 在 Popup 置顶显示
   const [showOnTheTop, setShowOnTheTop] = useState(false)
 
@@ -88,6 +115,7 @@ const RuleAction = ({ options, config, pipe }, ref) => {
       return
     }
     setActionTypeKey(actionConfig.actionType)
+    setReverseActionTypeKey(actionConfig.rev)
     setShowOnTheTop(actionConfig.showOnTheTop ?? false)
     setRefreshAfterEnable(actionConfig.reloadAfterEnable ?? false)
     setRefreshAfterDisable(actionConfig.reloadAfterDisable ?? false)
@@ -118,9 +146,54 @@ const RuleAction = ({ options, config, pipe }, ref) => {
     }
   }, [actionTypeKey])
 
+  useEffect(() => {
+    switch (reverseActionTypeKey) {
+      case "closeWhenMatched":
+        setReverseActionTipMessage(`🛠 ${getLang("rule_action_close_when_match_desc")}`)
+        break
+      case "openWhenMatched":
+        setReverseActionTipMessage(`🛠 ${getLang("rule_action_open_when_matched_desc")}`)
+        break
+      case "closeOnlyWhenMatched":
+        setReverseActionTipMessage(`🛠 ${getLang("rule_action_close_only_when_matched_desc")}`)
+        break
+      case "openOnlyWhenMatched":
+        setReverseActionTipMessage(`🛠 ${getLang("rule_action_open_only_when_matched_desc")}`)
+        break
+      case "none":
+        setReverseActionTipMessage(`🛠 ${getLang("rule_action_none_desc")}`)
+        break
+      default:
+        setReverseActionTipMessage(`🛠 ${getLang("rule_action_please_select_action")}`)
+    }
+  }, [reverseActionTypeKey])
+
   const onClickTopTipBtn = (e) => {
     e.preventDefault()
     chrome.tabs.create({ url: "https://ext.jgrass.cc/docs/advance" })
+  }
+
+  // component for reverse action selection
+  const ReverseAction = () => {
+    return (
+      <div className="action-label">
+        <h3>{getLang("select_reverse_action")}</h3>
+
+        <Radio.Group
+          onChange={(e) => setReverseActionTypeKey(e.target.value)}
+          value={reverseActionTypeKey}>
+          {reverseActionSelections.map((item) => {
+            return (
+              <Radio key={item.key} value={item.key}>
+                {item.label}
+              </Radio>
+            )
+          })}
+        </Radio.Group>
+
+        <p className="action-tip-match-type">{reverseActionTipMessage}</p>
+      </div>
+    )
   }
 
   return (
@@ -161,6 +234,8 @@ const RuleAction = ({ options, config, pipe }, ref) => {
             pipe={pipe}
             ref={customRef}></CustomRuleAction>
         )}
+
+        {reverseSelection && <ReverseAction></ReverseAction>}
 
         <Checkbox
           className="action-label action-show-options"

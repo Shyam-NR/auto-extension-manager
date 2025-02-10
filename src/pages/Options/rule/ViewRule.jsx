@@ -19,7 +19,8 @@ const { Column } = Table
 const ViewRule = memo((props) => {
   const [messageApi, contextHolder] = message.useMessage()
 
-  const { options, configs, extensions, operation } = props
+  const { options, configs, extensions, reverseSelection, updateReverseSelection, operation } =
+    props
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -219,6 +220,8 @@ const ViewRule = memo((props) => {
           options={options}
           config={editingConfig}
           extensions={extensions}
+          reverseSelection={reverseSelection}
+          updateReverseSelection={updateReverseSelection}
           onSave={onSave}
           onCancel={onCancel}></EditRule>
       )}

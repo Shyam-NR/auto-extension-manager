@@ -19,6 +19,12 @@ function RuleSetting() {
   // 用户配置
   const [options, setOptions] = useState({})
 
+  // Reverse Selection
+  const [reverseSelection, setReverseSelection] = useState(false)
+  const updateReverseSelection = (e) => {
+    setReverseSelection(e)
+  }
+
   // 初始化
   useEffect(() => {
     storage.options.getAll().then((options) => {
@@ -93,6 +99,8 @@ function RuleSetting() {
         options={options}
         configs={ruleConfigs}
         extensions={extensions}
+        reverseSelection={reverseSelection}
+        updateReverseSelection={updateReverseSelection}
         operation={operation}></ViewRule>
     </RuleSettingStyle>
   )

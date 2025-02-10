@@ -5,7 +5,10 @@ import styled from "styled-components"
 import ExtensionTarget from ".../pages/Options/components/ExtensionTarget"
 import { getLang } from ".../utils/utils"
 
-const ExtensionSelector = ({ options, config, extensions }, ref) => {
+const ExtensionSelector = (
+  { options, config, extensions, reverseSelection, updateReverseSelection },
+  ref
+) => {
   const emptyMessage = getLang("rule_set_target_no_any_target")
   const title = `2 ${getLang("rule_set_target_title")}`
 
@@ -32,6 +35,8 @@ const ExtensionSelector = ({ options, config, extensions }, ref) => {
       options={options}
       config={config}
       extensions={extensions}
+      reverseSelection={reverseSelection}
+      updateReverseSelection={updateReverseSelection}
       searchText={searchText}
       params={{ emptyMessage }}
       ref={selectorRef}>

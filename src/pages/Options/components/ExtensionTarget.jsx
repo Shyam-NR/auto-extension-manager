@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useEffect, useImperativeHandle, useState } from "react"
 
-import { Tag } from "antd"
+import { Checkbox, Tag } from "antd"
 import { styled } from "styled-components"
 
 import { storage } from ".../storage/sync"
@@ -11,7 +11,19 @@ import ExtensionItems from "./ExtensionItems"
 
 const { CheckableTag } = Tag
 
-const ExtensionTarget = ({ options, config, extensions, searchText, params, children }, ref) => {
+const ExtensionTarget = (
+  {
+    options,
+    config,
+    extensions,
+    reverseSelection,
+    updateReverseSelection,
+    searchText,
+    params,
+    children
+  },
+  ref
+) => {
   const groupList = storage.helper.formatGroups(options.groups)
 
   let emptyMessage = params.emptyMessage
@@ -28,7 +40,8 @@ const ExtensionTarget = ({ options, config, extensions, searchText, params, chil
 
       return {
         groups: selectGroupIds.filter((id) => groupList.find((g) => g.id === id)),
-        extensions: selectedExtensions.map((e) => e.id)
+        extensions: selectedExtensions.map((e) => e.id),
+        reverseSelectedExtensions: reverseSelection ? [unselectedExtensions].map((e) => e.id) : []
       }
     }
   }))
@@ -143,6 +156,16 @@ const ExtensionTarget = ({ options, config, extensions, searchText, params, chil
               items={displayUnselectedExtensions}
               placeholder={getLang("rule_set_target_no_any_extension")}
               onClick={onUnselectedExtensionClick}></ExtensionItems>
+          </div>
+
+          <div title={getLang("reverse_selection_description")}>
+            <Checkbox
+              className=""
+              onChange={(e) => {
+                updateReverseSelection(e.target.checked)
+              }}>
+              <h3>{getLang("reverse_selection")} </h3>
+            </Checkbox>
           </div>
         </div>
       </Style>

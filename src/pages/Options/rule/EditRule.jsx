@@ -11,7 +11,15 @@ import RuleAction from "./editor/RuleAction"
 const EditRule = memo((props) => {
   const [messageApi, contextHolder] = message.useMessage()
 
-  const { options, config, extensions, onSave, onCancel } = props
+  const {
+    options,
+    config,
+    extensions,
+    reverseSelection,
+    updateReverseSelection,
+    onSave,
+    onCancel
+  } = props
   const matchRuleRef = useRef(null)
   const selectorRef = useRef(null)
   const actionRef = useRef(null)
@@ -68,6 +76,8 @@ const EditRule = memo((props) => {
         options={options}
         config={config}
         extensions={extensions}
+        reverseSelection={reverseSelection}
+        updateReverseSelection={updateReverseSelection}
         ref={selectorRef}
       />
 
@@ -76,6 +86,7 @@ const EditRule = memo((props) => {
         options={options}
         config={config}
         ref={actionRef}
+        reverseSelection={reverseSelection}
         pipe={ruleSettingPipe}></RuleAction>
 
       <div className="operation-box">

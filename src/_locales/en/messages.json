@@ -248,6 +248,15 @@
   "setting_title": {
     "message": "Settings"
   },
+  "reverse_selection": {
+    "message": "Enable reverse selection"
+  },
+  "reverse_selection_description": {
+    "message": "Description - <ToDo>"
+  },
+  "select_reverse_action": {
+    "message": "Select action for unselected extensions"
+  },
   "rule_title": {
     "message": "Rules"
   },
